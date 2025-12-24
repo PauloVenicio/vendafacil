@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Controle de Vendas Ambulante</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; margin: 10px; background-color: #f4f7f6; }
+        .container { max-width: 900px; margin: auto; background: white; padding: 20px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); }
+        
+        /* Formulário */
+        .grid-input { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-bottom: 20px; background: #fdfdfd; padding: 15px; border: 1px solid #eee; border-radius: 10px; }
+        label { font-size: 12px; font-weight: bold; color: #666; display: block; margin-bottom: 4px; }
+        input, select { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
+        .btn-salvar { background: #2ecc71; color: white; border: none; padding: 15px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer; margin-bottom: 25px; }
+
+        /* Abas de Navegação */
+        .abas { display: flex; border-bottom: 2px solid #ddd; margin-bottom: 0; }
+        .aba { flex: 1; padding: 12px; text-align: center; cursor: pointer; background: #eee; font-weight: bold; color: #777; border-radius: 10px 10px 0 0; margin-right: 2px; }
+        .aba.ativa { background: #3498db; color: white; }
+
+        /* Área de Filtros */
+        .painel-filtros { background: white; border: 2px solid #3498db; border-top: none; padding: 20px; border-radius: 0 0 10px 10px; margin-bottom: 20px; }
+        .busca-container { display: flex; gap: 10px; }
+        .input-busca { flex: 1; border: 2px solid #3498db; font-size: 16px; }
+
+        /* Tabela */
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { padding: 12px; border-bottom: 1px solid #eee; text-align: left; font-size: 14px; }
+        th { background: #f8f9fa; color: #333; }
+        .venda-item:hover { background: #f9f9f9; }
+
+        /* Rodapé de Soma */
+        .rodape-total { background: #2c3e50; color: white; padding: 20px; border-radius: 10px; margin-top: 15px; display: flex; justify-content: space-between; align-items: center; }
+        .valor-soma { font-size: 24px; color: #2ecc71; font-weight: bold; }
+        .btn-excluir { color: #e74c3c; border: none; background: none; cursor: pointer; font-size: 18px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2 style="text-align:center; color: #2c3e50;">🛒 Controle de Vendas</h2>
+    
+    <div class="grid-input">
+        <div><label>Cliente</label><input type="text" id="cadCliente" placeholder="Nome"></div>
+        <div>
+            <label>Mês</label>
+            <select id="cadMes">
+                <option>Janeiro</option><option>Fevereiro</option><option>Março</option><option>Abril</option>
+                <option>Maio</option><option>Junho</option><option>Julho</option><option>Agosto</option>
+                <option>Setembro</option><option>Outubro</option><option>Novembro</option><option>Dezembro</option>
+            </select>
+        </div>
+        <div><label>Total (R$)</label><input type="number" id="cadValor" step="0.01"></div>
+        <div><label>Parcelas</label><input type="number" id="cadParc" value="1"></div>
+        <div>
+            <label>Pagamento</label>
+            <select id="cadPag">
+                <option>Dinheiro</option><option>Pix</option><option>Cartão</option>
+            </select>
+        </div>
+    </div>
+    <button class="btn-salvar" onclick="adicionarVenda()">GRAVAR VENDA</button>
+
+    <div class="abas">
+        <div id="abaM" class="aba ativa" onclick="mudarTab('mensal')">VISÃO MENSAL</div>
+        <div id="abaG" class="aba" onclick="mudarTab('geral')">VISÃO GERAL / CLIENTE</div>
+    </div>
+
+    <div class="painel-filtros">
+        <div id="filtroMensalArea">
+            <label>Escolha o Mês para ver as vendas:</label>
+            <select id="filtroMesSelect" onchange="atualizarLista()">
+                <option>Janeiro</option><option>Fevereiro</option><option>Março</option><option>Abril</option>
+                <option>Maio</option><option>Junho</option><option>Julho</option><option>Agosto</option>
+                <option>Setembro</option><option>Outubro</option><option>Novembro</option><option>Dezembro</option>
+            </select>
+        </div>
+
+        <div id="filtroGeralArea" style="display: none;">
+            <label>Digite o nome do cliente para ver TUDO que ele comprou:</label>
+            <div class="busca-container">
+                <input type="text" id="inputBuscaGeral" class="input-busca" placeholder="Ex: João Silva" oninput="atualizarLista()">
+            </div>
+            <p style="font-size: 11px; color: #3498db; margin-top: 5px;">* Deixe vazio para ver o faturamento de todos os meses somados.</p>
+        </div>
+    </div>
+
+    <div style="overflow-x: auto;">
+        <table>
+            <thead>
+                <tr>
+                    <th>Mês</th>
+                    <th>Cliente</th>
+                    <th>Valor Total</th>
+                    <th>Detalhes</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="tabelaCorpo"></tbody>
+        </table>
+    </div>
+
+    <div class="rodape-total">
+        <div>
+            <span id="tituloSoma" style="display:block; font-size: 12px; color: #bdc3c7;">TOTAL NO PERÍODO</span>
+            <span id="labelNomeCliente" style="font-weight: bold; color: #3498db;">Todos</span>
+        </div>
+        <div class="valor-soma" id="displayTotal">R$ 0,00</div>
+    </div>
+</div>
+
+<script>
+    let abaAtual = 'mensal';
+
+    // Salvar Dados
+    function adicionarVenda() {
+        const cliente = document.getElementById('cadCliente').value;
+        const valor = parseFloat(document.getElementById('cadValor').value);
+        if(!cliente || isNaN(valor)) return alert("Preencha o nome e o valor!");
+
+        const venda = {
+            id: Date.now(),
+            cliente: cliente,
+            mes: document.getElementById('cadMes').value,
+            valor: valor,
+            parcelas: document.getElementById('cadParc').value,
+            pagamento: document.getElementById('cadPag').value
+        };
+
+        let banco = JSON.parse(localStorage.getItem('vendas_app') || '[]');
+        banco.push(venda);
+        localStorage.setItem('vendas_app', JSON.stringify(banco));
+        
+        document.getElementById('cadCliente').value = "";
+        document.getElementById('cadValor').value = "";
+        atualizarLista();
+    }
+
+    // Mudar de Aba
+    function mudarTab(tab) {
+        abaAtual = tab;
+        document.getElementById('abaM').className = tab === 'mensal' ? 'aba ativa' : 'aba';
+        document.getElementById('abaG').className = tab === 'geral' ? 'aba ativa' : 'aba';
+        
+        document.getElementById('filtroMensalArea').style.display = tab === 'mensal' ? 'block' : 'none';
+        document.getElementById('filtroGeralArea').style.display = tab === 'geral' ? 'block' : 'none';
+        
+        atualizarLista();
+    }
+
+    // Renderizar Lista Corrigida
+    function atualizarLista() {
+        const banco = JSON.parse(localStorage.getItem('vendas_app') || '[]');
+        const corpo = document.getElementById('tabelaCorpo');
+        const busca = document.getElementById('inputBuscaGeral').value.toLowerCase();
+        const mesFiltro = document.getElementById('filtroMesSelect').value;
+        
+        let totalSoma = 0;
+        corpo.innerHTML = "";
+
+        // Lógica de Filtragem:
+        const filtrados = banco.filter(item => {
+            if (abaAtual === 'mensal') {
+                // Na visão mensal, busca pelo mês selecionado
+                return item.mes === mesFiltro;
+            } else {
+                // Na visão GERAL, se houver busca, filtra pelo NOME em todos os meses
+                if (busca !== "") {
+                    return item.cliente.toLowerCase().includes(busca);
+                }
+                // Se busca vazia na visão geral, mostra TUDO
+                return true;
+            }
+        });
+
+        filtrados.forEach(v => {
+            totalSoma += v.valor;
+            corpo.innerHTML += `
+                <tr class="venda-item">
+                    <td><small>${v.mes}</small></td>
+                    <td><strong>${v.cliente}</strong></td>
+                    <td>R$ ${v.valor.toFixed(2)}</td>
+                    <td><small>${v.parcelas}x no ${v.pagamento}</small></td>
+                    <td><button class="btn-excluir" onclick="removerVenda(${v.id})">×</button></td>
+                </tr>`;
+        });
+
+        // Atualizar Rodapé
+        document.getElementById('displayTotal').innerText = `R$ ${totalSoma.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
+        
+        if (abaAtual === 'geral') {
+            document.getElementById('tituloSoma').innerText = "SOMA TOTAL ACUMULADA";
+            document.getElementById('labelNomeCliente').innerText = busca === "" ? "De todos os meses" : `Histórico de: ${busca}`;
+        } else {
+            document.getElementById('tituloSoma').innerText = `TOTAL EM ${mesFiltro.toUpperCase()}`;
+            document.getElementById('labelNomeCliente').innerText = "Vendas do Mês";
+        }
+    }
+
+    function removerVenda(id) {
+        if(confirm("Excluir esta venda definitivamente?")) {
+            let banco = JSON.parse(localStorage.getItem('vendas_app') || '[]');
+            banco = banco.filter(i => i.id !== id);
+            localStorage.setItem('vendas_app', JSON.stringify(banco));
+            atualizarLista();
+        }
+    }
+
+    // Iniciar com mês atual
+    window.onload = () => {
+        const meses = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
+        const mesHoje = meses[new Date().getMonth()];
+        document.getElementById('filtroMesSelect').value = mesHoje;
+        document.getElementById('cadMes').value = mesHoje;
+        atualizarLista();
+    };
+</script>
+
+</body>
+</html>
