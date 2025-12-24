@@ -81,24 +81,24 @@
         .painel-filtros { background: var(--bg-container); border: 2px solid #3498db; border-top: none; padding: 15px; border-radius: 0 0 10px 10px; margin-bottom: 20px; }
         .input-busca { width: 100%; border: 2px solid #3498db; font-size: 15px; padding: 12px; border-radius: 8px; background: var(--input-bg); color: var(--text-main); box-sizing: border-box; }
 
-        /* Tabela Responsiva */
         .table-wrapper { overflow-x: auto; margin-top: 10px; border-radius: 8px; }
         table { width: 100%; border-collapse: collapse; }
         th, td { padding: 12px; border-bottom: 1px solid var(--border-color); text-align: left; font-size: 14px; color: var(--text-main); }
         th { background: var(--table-head); white-space: nowrap; }
 
-        @media (max-width: 500px) {
+        /* Responsividade Mobile - Tabela vira Card */
+        @media (max-width: 600px) {
             table, thead, tbody, th, td, tr { display: block; }
-            thead tr { position: absolute; top: -9999px; left: -9999px; }
-            tr { border: 1px solid var(--border-color); margin-bottom: 10px; border-radius: 8px; padding: 5px; }
-            td { border: none; position: relative; padding-left: 40%; text-align: right; border-bottom: 1px solid #eee; }
+thead tr { position: absolute; top: -9999px; left: -9999px; }
+            tr { border: 1px solid var(--border-color); margin-bottom: 15px; border-radius: 8px; padding: 5px; background: var(--table-head); }
+            td { border: none; position: relative; padding-left: 45%; text-align: right; border-bottom: 1px solid #eee; min-height: 35px; display: flex; align-items: center; justify-content: flex-end; }
             td:last-child { border-bottom: none; }
-            td:before { position: absolute; left: 10px; width: 35%; text-align: left; font-weight: bold; content: attr(data-label); color: var(--text-secondary); font-size: 12px; }
+            td:before { position: absolute; left: 10px; width: 40%; text-align: left; font-weight: bold; content: attr(data-label); color: var(--text-secondary); font-size: 11px; }
         }
 
         .status-pago { color: #2ecc71; font-weight: bold; text-decoration: line-through; opacity: 0.6; }
         .btn-status { padding: 8px 12px; border-radius: 6px; border: 1px solid var(--border-color); cursor: pointer; font-size: 11px; font-weight: bold; background: var(--input-bg); color: var(--text-main); }
-        .btn-pago { background: #155724; color: #d4edda; border-color: #2ecc71; }
+        .btn-pago { background: #155724 !important; color: #d4edda !important; border-color: #2ecc71; }
 
         .rodape-total { background: #2c3e50; color: white; padding: 15px; border-radius: 10px; margin-top: 15px; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 10px; }
         @media (min-width: 600px) { .rodape-total { flex-direction: row; justify-content: space-between; text-align: left; } }
@@ -170,6 +170,7 @@
                     <th>Mês</th>
                     <th>Cliente</th>
                     <th>Valor</th>
+                    <th>Parcelas</th>
                     <th>Status</th>
                     <th>Ações</th>
                 </tr>
@@ -274,6 +275,7 @@
                     <td data-label="Mês">${v.mes}</td>
                     <td data-label="Cliente"><strong class="${v.pago ? 'status-pago' : ''}">${v.cliente}</strong></td>
                     <td data-label="Valor" class="${v.pago ? 'status-pago' : ''}">R$ ${v.valor.toFixed(2)}</td>
+                    <td data-label="Parcelas">${v.parcelas}x</td>
                     <td data-label="Status">
                         <button class="btn-status ${v.pago ? 'btn-pago' : ''}" onclick="alternarPagamento(${v.id})">
                             ${v.pago ? '✅ PAGO' : '⏳ RECEBER'}
