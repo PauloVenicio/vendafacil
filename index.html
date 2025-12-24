@@ -13,6 +13,7 @@
             --border-color: #ddd;
             --table-head: #f8f9fa;
             --input-bg: white;
+            --accent: #3498db;
         }
 
         body.dark-mode {
@@ -27,76 +28,66 @@
 
         body { 
             font-family: 'Segoe UI', Tahoma, sans-serif; 
-            margin: 0; 
-            padding: 10px;
+            margin: 0; padding: 10px;
             background-color: var(--bg-body); 
             color: var(--text-main);
-            display: flex; 
-            flex-direction: column; 
-            min-height: 100vh; 
+            display: flex; flex-direction: column; min-height: 100vh; 
             transition: background 0.3s;
         }
 
         .container { 
-            width: 100%;
-            max-width: 900px; 
-            margin: auto; 
-            background: var(--bg-container); 
-            padding: 15px; 
-            border-radius: 15px; 
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1); 
-            flex: 1;
-            box-sizing: border-box;
+            width: 100%; max-width: 900px; margin: auto; 
+            background: var(--bg-container); padding: 15px; 
+            border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); 
+            flex: 1; box-sizing: border-box;
         }
         
         .grid-input { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); 
-            gap: 12px; 
-            margin-bottom: 20px; 
-            background: var(--table-head); 
-            padding: 15px; 
-            border: 1px solid var(--border-color); 
-            border-radius: 10px; 
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); 
+            gap: 12px; margin-bottom: 10px; background: var(--table-head); 
+            padding: 15px; border: 1px solid var(--border-color); border-radius: 10px; 
         }
 
         label { font-size: 11px; font-weight: bold; color: var(--text-secondary); display: block; margin-bottom: 4px; text-transform: uppercase; }
         
         input, select { 
-            width: 100%; padding: 12px; 
-            border: 1px solid var(--border-color); 
-            border-radius: 8px; 
-            box-sizing: border-box; 
-            background: var(--input-bg);
-            color: var(--text-main);
-            font-size: 14px;
+            width: 100%; padding: 12px; border: 1px solid var(--border-color); 
+            border-radius: 8px; box-sizing: border-box; background: var(--input-bg);
+            color: var(--text-main); font-size: 14px;
         }
+
+        .info-calculo {
+            background: #e8f4fd; color: #2980b9; padding: 10px;
+            border-radius: 8px; font-size: 13px; margin-bottom: 15px;
+            display: flex; justify-content: space-between; font-weight: bold;
+        }
+
+        .dark-mode .info-calculo { background: #1a3a4a; color: #81d4fa; }
         
         .btn-salvar { background: #2ecc71; color: white; border: none; padding: 16px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer; margin-bottom: 25px; font-size: 16px; }
 
         .abas { display: flex; border-bottom: 2px solid var(--border-color); gap: 2px; }
         .aba { flex: 1; padding: 12px 5px; text-align: center; cursor: pointer; background: var(--border-color); font-weight: bold; color: var(--text-secondary); border-radius: 10px 10px 0 0; font-size: 12px; }
-        .aba.ativa { background: #3498db; color: white; }
+        .aba.ativa { background: var(--accent); color: white; }
 
-        .painel-filtros { background: var(--bg-container); border: 2px solid #3498db; border-top: none; padding: 15px; border-radius: 0 0 10px 10px; margin-bottom: 20px; }
-        .input-busca { width: 100%; border: 2px solid #3498db; font-size: 15px; padding: 12px; border-radius: 8px; background: var(--input-bg); color: var(--text-main); box-sizing: border-box; }
+        .painel-filtros { background: var(--bg-container); border: 2px solid var(--accent); border-top: none; padding: 15px; border-radius: 0 0 10px 10px; margin-bottom: 20px; }
+        .input-busca { width: 100%; border: 2px solid var(--accent); font-size: 15px; padding: 12px; border-radius: 8px; background: var(--input-bg); color: var(--text-main); box-sizing: border-box; }
 
         .table-wrapper { overflow-x: auto; margin-top: 10px; border-radius: 8px; }
         table { width: 100%; border-collapse: collapse; }
         th, td { padding: 12px; border-bottom: 1px solid var(--border-color); text-align: left; font-size: 14px; color: var(--text-main); }
         th { background: var(--table-head); white-space: nowrap; }
 
-        /* Responsividade Mobile - Tabela vira Card */
-        @media (max-width: 600px) {
+        @media (max-width: 650px) {
             table, thead, tbody, th, td, tr { display: block; }
-thead tr { position: absolute; top: -9999px; left: -9999px; }
+            thead tr { position: absolute; top: -9999px; left: -9999px; }
             tr { border: 1px solid var(--border-color); margin-bottom: 15px; border-radius: 8px; padding: 5px; background: var(--table-head); }
             td { border: none; position: relative; padding-left: 45%; text-align: right; border-bottom: 1px solid #eee; min-height: 35px; display: flex; align-items: center; justify-content: flex-end; }
             td:last-child { border-bottom: none; }
             td:before { position: absolute; left: 10px; width: 40%; text-align: left; font-weight: bold; content: attr(data-label); color: var(--text-secondary); font-size: 11px; }
         }
 
-        .status-pago { color: #2ecc71; font-weight: bold; text-decoration: line-through; opacity: 0.6; }
+        .status-pago { color: #2ecc71 !important; font-weight: bold; text-decoration: line-through; opacity: 0.6; }
         .btn-status { padding: 8px 12px; border-radius: 6px; border: 1px solid var(--border-color); cursor: pointer; font-size: 11px; font-weight: bold; background: var(--input-bg); color: var(--text-main); }
         .btn-pago { background: #155724 !important; color: #d4edda !important; border-color: #2ecc71; }
 
@@ -110,8 +101,7 @@ thead tr { position: absolute; top: -9999px; left: -9999px; }
         .footer-content { display: flex; flex-direction: column; align-items: center; gap: 12px; }
         .copyright { color: var(--text-secondary); font-size: 12px; line-height: 1.4; }
 
-        .dark-mode-btn { background: #3498db; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 13px; }
-
+        .dark-mode-btn { background: var(--accent); color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 13px; margin-top: 5px; }
         .btn-excluir { color: #e74c3c; border: none; background: none; cursor: pointer; font-size: 22px; padding: 5px; }
     </style>
 </head>
@@ -130,15 +120,23 @@ thead tr { position: absolute; top: -9999px; left: -9999px; }
                 <option>Setembro</option><option>Outubro</option><option>Novembro</option><option>Dezembro</option>
             </select>
         </div>
-        <div><label>Total (R$)</label><input type="number" id="cadValor" step="0.01"></div>
-        <div><label>Parcelas</label><input type="number" id="cadParc" value="1"></div>
+        <div><label>Valor (R$)</label><input type="number" id="cadValor" step="0.01" oninput="atualizarCalculo()"></div>
+        <div><label>Parcelas</label><input type="number" id="cadParc" value="1" min="1" oninput="atualizarCalculo()"></div>
         <div>
             <label>Pagamento</label>
-            <select id="cadPag">
-                <option>Dinheiro</option><option>Pix</option><option>Cartão</option>
+            <select id="cadPag" onchange="atualizarCalculo()">
+                <option value="Dinheiro">Dinheiro</option>
+                <option value="Pix">Pix</option>
+                <option value="Cartão">Cartão (+5%)</option>
             </select>
         </div>
     </div>
+
+    <div class="info-calculo" id="painelCalculo">
+        <span>Total: R$ 0,00</span>
+        <span>Parcela: 1x R$ 0,00</span>
+    </div>
+
     <button class="btn-salvar" onclick="adicionarVenda()">GRAVAR VENDA</button>
 
     <div class="abas">
@@ -157,7 +155,7 @@ thead tr { position: absolute; top: -9999px; left: -9999px; }
         </div>
 
         <div id="filtroGeralArea" style="display: none;">
-            <label>🔎 Buscar por Cliente:</label>
+            <label>🔎 Buscar por Cliente (Todos os meses):</label>
             <input type="text" id="inputBuscaGeral" class="input-busca" placeholder="Digite o nome..." oninput="atualizarLista()">
             <button class="btn-export" onclick="exportarExcel()">📊 Exportar para Excel</button>
         </div>
@@ -169,10 +167,10 @@ thead tr { position: absolute; top: -9999px; left: -9999px; }
                 <tr>
                     <th>Mês</th>
                     <th>Cliente</th>
-                    <th>Valor</th>
-                    <th>Parcelas</th>
+                    <th>Total</th>
+                    <th>Detalhes</th>
                     <th>Status</th>
-                    <th>Ações</th>
+                    <th>Ação</th>
                 </tr>
             </thead>
             <tbody id="tabelaCorpo"></tbody>
@@ -191,101 +189,134 @@ thead tr { position: absolute; top: -9999px; left: -9999px; }
 <footer>
     <div class="footer-content">
         <span class="copyright">Copyright 2025 - Paulo Carvalho<br>todos os direitos reservados</span>
-        <button class="dark-mode-btn" onclick="toggleDarkMode()" id="darkModeBtn">🌙 Modo Escuro</button>
+        <button class="dark-mode-btn" onclick="toggleDarkMode()" id="darkModeBtn">🌙 Ativar Modo Escuro</button>
     </div>
 </footer>
 
 <script>
     let abaAtual = 'mensal';
 
+    function atualizarCalculo() {
+        let valorRaw = parseFloat(document.getElementById('cadValor').value) || 0;
+        const parcelas = parseInt(document.getElementById('cadParc').value) || 1;
+        const tipoPagamento = document.getElementById('cadPag').value;
+        
+        let valorFinal = (tipoPagamento === "Cartão") ? valorRaw * 1.05 : valorRaw;
+        let valorParcela = valorFinal / parcelas;
+
+        document.getElementById('painelCalculo').innerHTML = `
+            <span>Total: R$ ${valorFinal.toFixed(2).replace('.', ',')}</span>
+            <span>Parcela: ${parcelas}x R$ ${valorParcela.toFixed(2).replace('.', ',')}</span>
+        `;
+        return { total: valorFinal, parcela: valorParcela };
+    }
+
     function toggleDarkMode() {
         document.body.classList.toggle('dark-mode');
         const isDark = document.body.classList.contains('dark-mode');
-        localStorage.setItem('dark-mode', isDark);
-        document.getElementById('darkModeBtn').innerText = isDark ? '☀️ Modo Claro' : '🌙 Modo Escuro';
+        localStorage.setItem('dark-mode-pc', isDark);
+        document.getElementById('darkModeBtn').innerText = isDark ? '☀️ Ativar Modo Claro' : '🌙 Ativar Modo Escuro';
     }
 
-    if (localStorage.getItem('dark-mode') === 'true') {
+    if (localStorage.getItem('dark-mode-pc') === 'true') {
         document.body.classList.add('dark-mode');
-        document.getElementById('darkModeBtn').innerText = '☀️ Modo Claro';
+        document.getElementById('darkModeBtn').innerText = '☀️ Ativar Modo Claro';
     }
 
     function adicionarVenda() {
-        const cliente = document.getElementById('cadCliente').value;
-        const valor = parseFloat(document.getElementById('cadValor').value);
-        if(!cliente || isNaN(valor)) return alert("Preencha o nome e o valor!");
+        const cliente = document.getElementById('cadCliente').value.trim();
+        const calc = atualizarCalculo();
+        
+        if(!cliente || calc.total <= 0) {
+            alert("Preencha o nome e o valor corretamente!");
+            return;
+        }
 
-        const venda = {
+        const novaVenda = {
             id: Date.now(),
             cliente: cliente,
             mes: document.getElementById('cadMes').value,
-            valor: valor,
-            parcelas: document.getElementById('cadParc').value,
+            valor: calc.total,
+            vParcela: calc.parcela,
+            parcelas: parseInt(document.getElementById('cadParc').value) || 1,
             pagamento: document.getElementById('cadPag').value,
             pago: false
         };
 
-        let banco = JSON.parse(localStorage.getItem('vendas_app_pc') || '[]');
-        banco.push(venda);
-        localStorage.setItem('vendas_app_pc', JSON.stringify(banco));
+        let banco = JSON.parse(localStorage.getItem('vendas_paulo_carvalho_v2') || '[]');
+        banco.push(novaVenda);
+        localStorage.setItem('vendas_paulo_carvalho_v2', JSON.stringify(banco));
         
         document.getElementById('cadCliente').value = "";
         document.getElementById('cadValor').value = "";
+        atualizarCalculo();
         atualizarLista();
     }
 
     function mudarTab(tab) {
         abaAtual = tab;
-        document.getElementById('abaM').className = tab === 'mensal' ? 'aba ativa' : 'aba';
-        document.getElementById('abaG').className = tab === 'geral' ? 'aba ativa' : 'aba';
-        document.getElementById('filtroMensalArea').style.display = tab === 'mensal' ? 'block' : 'none';
-        document.getElementById('filtroGeralArea').style.display = tab === 'geral' ? 'block' : 'none';
+        document.getElementById('abaM').className = (tab === 'mensal') ? 'aba ativa' : 'aba';
+        document.getElementById('abaG').className = (tab === 'geral') ? 'aba ativa' : 'aba';
+        document.getElementById('filtroMensalArea').style.display = (tab === 'mensal') ? 'block' : 'none';
+        document.getElementById('filtroGeralArea').style.display = (tab === 'geral') ? 'block' : 'none';
         atualizarLista();
     }
 
     function alternarPagamento(id) {
-        let banco = JSON.parse(localStorage.getItem('vendas_app_pc') || '[]');
+        let banco = JSON.parse(localStorage.getItem('vendas_paulo_carvalho_v2') || '[]');
         banco = banco.map(v => v.id === id ? {...v, pago: !v.pago} : v);
-        localStorage.setItem('vendas_app_pc', JSON.stringify(banco));
+        localStorage.setItem('vendas_paulo_carvalho_v2', JSON.stringify(banco));
         atualizarLista();
     }
 
+    function removerVenda(id) {
+        if(confirm("Deseja apagar este registro?")) {
+            let banco = JSON.parse(localStorage.getItem('vendas_paulo_carvalho_v2') || '[]');
+            banco = banco.filter(v => v.id !== id);
+            localStorage.setItem('vendas_paulo_carvalho_v2', JSON.stringify(banco));
+            atualizarLista();
+        }
+    }
+
     function atualizarLista() {
-        const banco = JSON.parse(localStorage.getItem('vendas_app_pc') || '[]');
+        const banco = JSON.parse(localStorage.getItem('vendas_paulo_carvalho_v2') || '[]');
         const corpo = document.getElementById('tabelaCorpo');
         const busca = document.getElementById('inputBuscaGeral').value.toLowerCase();
         const mesFiltro = document.getElementById('filtroMesSelect').value;
         
-        let totalPendente = 0;
+        let somaPendente = 0;
         corpo.innerHTML = "";
 
-        const filtrados = banco.filter(item => {
-            if (abaAtual === 'mensal') {
-                return item.mes === mesFiltro;
-            } else {
-                return busca === "" ? true : item.cliente.toLowerCase().includes(busca);
-            }
+        // Filtragem
+        const filtrados = banco.filter(v => {
+            const matchNome = v.cliente.toLowerCase().includes(busca);
+            const matchMes = (abaAtual === 'geral') ? true : (v.mes === mesFiltro);
+            return matchNome && matchMes;
         });
 
         filtrados.forEach(v => {
-            if (!v.pago) totalPendente += v.valor;
-            
-            corpo.innerHTML += `
-                <tr class="venda-item">
-                    <td data-label="Mês">${v.mes}</td>
-                    <td data-label="Cliente"><strong class="${v.pago ? 'status-pago' : ''}">${v.cliente}</strong></td>
-                    <td data-label="Valor" class="${v.pago ? 'status-pago' : ''}">R$ ${v.valor.toFixed(2)}</td>
-                    <td data-label="Parcelas">${v.parcelas}x</td>
-                    <td data-label="Status">
-                        <button class="btn-status ${v.pago ? 'btn-pago' : ''}" onclick="alternarPagamento(${v.id})">
-                            ${v.pago ? '✅ PAGO' : '⏳ RECEBER'}
-                        </button>
-                    </td>
-                    <td data-label="Ação"><button class="btn-excluir" onclick="removerVenda(${v.id})">🗑️</button></td>
-                </tr>`;
+            const valorNum = parseFloat(v.valor) || 0;
+            const parcNum = parseFloat(v.vParcela) || 0;
+            if (!v.pago) somaPendente += valorNum;
+
+            const linha = document.createElement('tr');
+            linha.className = "venda-item";
+            linha.innerHTML = `
+                <td data-label="Mês">${v.mes}</td>
+                <td data-label="Cliente"><strong class="${v.pago ? 'status-pago' : ''}">${v.cliente}</strong></td>
+                <td data-label="Total" class="${v.pago ? 'status-pago' : ''}">R$ ${valorNum.toFixed(2).replace('.',',')}</td>
+                <td data-label="Detalhes">${v.parcelas}x de R$ ${parcNum.toFixed(2).replace('.',',')}</td>
+                <td data-label="Status">
+                    <button class="btn-status ${v.pago ? 'btn-pago' : ''}" onclick="alternarPagamento(${v.id})">
+                        ${v.pago ? '✅ PAGO' : '⏳ RECEBER'}
+                    </button>
+                </td>
+                <td data-label="Ação"><button class="btn-excluir" onclick="removerVenda(${v.id})">🗑️</button></td>
+            `;
+            corpo.appendChild(linha);
         });
 
-        document.getElementById('displayTotal').innerText = `R$ ${totalPendente.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
+        document.getElementById('displayTotal').innerText = `R$ ${somaPendente.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
         
         if (abaAtual === 'geral') {
             document.getElementById('tituloSoma').innerText = "DÍVIDA TOTAL PENDENTE";
@@ -296,18 +327,9 @@ thead tr { position: absolute; top: -9999px; left: -9999px; }
         }
     }
 
-    function removerVenda(id) {
-        if(confirm("Deseja apagar este registro?")) {
-            let banco = JSON.parse(localStorage.getItem('vendas_app_pc') || '[]');
-            banco = banco.filter(i => i.id !== id);
-            localStorage.setItem('vendas_app_pc', JSON.stringify(banco));
-            atualizarLista();
-        }
-    }
-
     function exportarExcel() {
-        const banco = JSON.parse(localStorage.getItem('vendas_app_pc') || '[]');
-        if(banco.length === 0) return alert("Não há dados para exportar.");
+        const banco = JSON.parse(localStorage.getItem('vendas_paulo_carvalho_v2') || '[]');
+        if(banco.length === 0) return alert("Não há dados.");
         let csv = "\uFEFFMês;Cliente;Valor;Parcelas;Pagamento;Status\n";
         banco.forEach(v => {
             csv += `${v.mes};${v.cliente};${v.valor.toFixed(2).replace('.', ',')};${v.parcelas};${v.pagamento};${v.pago ? "Pago" : "Pendente"}\n`;
@@ -315,7 +337,7 @@ thead tr { position: absolute; top: -9999px; left: -9999px; }
         const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
         const link = document.createElement("a");
         link.href = URL.createObjectURL(blob);
-        link.download = "vendas_paulo_carvalho.csv";
+        link.download = "minhas_vendas.csv";
         link.click();
     }
 
