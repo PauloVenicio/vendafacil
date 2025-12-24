@@ -5,45 +5,120 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Controle de Vendas - Paulo Carvalho</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; margin: 10px; background-color: #f4f7f6; display: flex; flex-direction: column; min-height: 100vh; }
-        .container { max-width: 900px; margin: auto; background: white; padding: 20px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); flex: 1; }
-        
-        .grid-input { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-bottom: 20px; background: #fdfdfd; padding: 15px; border: 1px solid #eee; border-radius: 10px; }
-        label { font-size: 12px; font-weight: bold; color: #666; display: block; margin-bottom: 4px; }
-        input, select { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
-        
-        .btn-salvar { background: #2ecc71; color: white; border: none; padding: 15px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer; margin-bottom: 25px; transition: 0.3s; }
-        .btn-salvar:hover { background: #27ae60; }
+        :root {
+            --bg-body: #f4f7f6;
+            --bg-container: white;
+            --text-main: #2c3e50;
+            --text-secondary: #666;
+            --border-color: #ddd;
+            --table-head: #f8f9fa;
+            --input-bg: white;
+        }
 
-        .abas { display: flex; border-bottom: 2px solid #ddd; }
-        .aba { flex: 1; padding: 12px; text-align: center; cursor: pointer; background: #eee; font-weight: bold; color: #777; border-radius: 10px 10px 0 0; margin-right: 2px; }
+        body.dark-mode {
+            --bg-body: #121212;
+            --bg-container: #1e1e1e;
+            --text-main: #e0e0e0;
+            --text-secondary: #b0b0b0;
+            --border-color: #333;
+            --table-head: #252525;
+            --input-bg: #2d2d2d;
+        }
+
+        body { 
+            font-family: 'Segoe UI', Tahoma, sans-serif; 
+            margin: 0; 
+            padding: 10px;
+            background-color: var(--bg-body); 
+            color: var(--text-main);
+            display: flex; 
+            flex-direction: column; 
+            min-height: 100vh; 
+            transition: background 0.3s;
+        }
+
+        .container { 
+            width: 100%;
+            max-width: 900px; 
+            margin: auto; 
+            background: var(--bg-container); 
+            padding: 15px; 
+            border-radius: 15px; 
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1); 
+            flex: 1;
+            box-sizing: border-box;
+        }
+        
+        .grid-input { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); 
+            gap: 12px; 
+            margin-bottom: 20px; 
+            background: var(--table-head); 
+            padding: 15px; 
+            border: 1px solid var(--border-color); 
+            border-radius: 10px; 
+        }
+
+        label { font-size: 11px; font-weight: bold; color: var(--text-secondary); display: block; margin-bottom: 4px; text-transform: uppercase; }
+        
+        input, select { 
+            width: 100%; padding: 12px; 
+            border: 1px solid var(--border-color); 
+            border-radius: 8px; 
+            box-sizing: border-box; 
+            background: var(--input-bg);
+            color: var(--text-main);
+            font-size: 14px;
+        }
+        
+        .btn-salvar { background: #2ecc71; color: white; border: none; padding: 16px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer; margin-bottom: 25px; font-size: 16px; }
+
+        .abas { display: flex; border-bottom: 2px solid var(--border-color); gap: 2px; }
+        .aba { flex: 1; padding: 12px 5px; text-align: center; cursor: pointer; background: var(--border-color); font-weight: bold; color: var(--text-secondary); border-radius: 10px 10px 0 0; font-size: 12px; }
         .aba.ativa { background: #3498db; color: white; }
 
-        .painel-filtros { background: white; border: 2px solid #3498db; border-top: none; padding: 20px; border-radius: 0 0 10px 10px; margin-bottom: 20px; }
-        .input-busca { width: 100%; border: 2px solid #3498db; font-size: 16px; padding: 10px; border-radius: 8px; }
+        .painel-filtros { background: var(--bg-container); border: 2px solid #3498db; border-top: none; padding: 15px; border-radius: 0 0 10px 10px; margin-bottom: 20px; }
+        .input-busca { width: 100%; border: 2px solid #3498db; font-size: 15px; padding: 12px; border-radius: 8px; background: var(--input-bg); color: var(--text-main); box-sizing: border-box; }
 
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        th, td { padding: 12px; border-bottom: 1px solid #eee; text-align: left; font-size: 14px; }
-        th { background: #f8f9fa; }
+        /* Tabela Responsiva */
+        .table-wrapper { overflow-x: auto; margin-top: 10px; border-radius: 8px; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 12px; border-bottom: 1px solid var(--border-color); text-align: left; font-size: 14px; color: var(--text-main); }
+        th { background: var(--table-head); white-space: nowrap; }
 
-        /* Status Cores */
-        .status-pendente { color: #e67e22; font-weight: bold; }
+        @media (max-width: 500px) {
+            table, thead, tbody, th, td, tr { display: block; }
+            thead tr { position: absolute; top: -9999px; left: -9999px; }
+            tr { border: 1px solid var(--border-color); margin-bottom: 10px; border-radius: 8px; padding: 5px; }
+            td { border: none; position: relative; padding-left: 40%; text-align: right; border-bottom: 1px solid #eee; }
+            td:last-child { border-bottom: none; }
+            td:before { position: absolute; left: 10px; width: 35%; text-align: left; font-weight: bold; content: attr(data-label); color: var(--text-secondary); font-size: 12px; }
+        }
+
         .status-pago { color: #2ecc71; font-weight: bold; text-decoration: line-through; opacity: 0.6; }
-        
-        .btn-status { padding: 5px 10px; border-radius: 5px; border: 1px solid #ddd; cursor: pointer; font-size: 11px; font-weight: bold; background: #fff; }
-        .btn-pago { background: #d4edda; color: #155724; border-color: #c3e6cb; }
+        .btn-status { padding: 8px 12px; border-radius: 6px; border: 1px solid var(--border-color); cursor: pointer; font-size: 11px; font-weight: bold; background: var(--input-bg); color: var(--text-main); }
+        .btn-pago { background: #155724; color: #d4edda; border-color: #2ecc71; }
 
-        .rodape-total { background: #2c3e50; color: white; padding: 20px; border-radius: 10px; margin-top: 15px; display: flex; justify-content: space-between; align-items: center; }
-        .valor-soma { font-size: 24px; color: #f1c40f; font-weight: bold; }
+        .rodape-total { background: #2c3e50; color: white; padding: 15px; border-radius: 10px; margin-top: 15px; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 10px; }
+        @media (min-width: 600px) { .rodape-total { flex-direction: row; justify-content: space-between; text-align: left; } }
         
-        footer { text-align: center; padding: 20px; color: #7f8c8d; font-size: 13px; margin-top: 20px; }
-        .btn-excluir { color: #e74c3c; border: none; background: none; cursor: pointer; font-size: 18px; }
+        .valor-soma { font-size: 22px; color: #f1c40f; font-weight: bold; }
+        .btn-export { background: #6c757d; color: white; border: none; padding: 12px; border-radius: 6px; cursor: pointer; font-size: 13px; margin-top: 10px; font-weight: bold; width: 100%; }
+
+        footer { text-align: center; padding: 20px 10px; background: var(--bg-container); border-top: 1px solid var(--border-color); margin-top: 20px; }
+        .footer-content { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+        .copyright { color: var(--text-secondary); font-size: 12px; line-height: 1.4; }
+
+        .dark-mode-btn { background: #3498db; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 13px; }
+
+        .btn-excluir { color: #e74c3c; border: none; background: none; cursor: pointer; font-size: 22px; padding: 5px; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2 style="text-align:center; color: #2c3e50;">🛒 Controle de Vendas</h2>
+    <h2 style="text-align:center;">🛒 Controle de Vendas</h2>
     
     <div class="grid-input">
         <div><label>Cliente</label><input type="text" id="cadCliente" placeholder="Nome"></div>
@@ -68,7 +143,7 @@
 
     <div class="abas">
         <div id="abaM" class="aba ativa" onclick="mudarTab('mensal')">VISÃO MENSAL</div>
-        <div id="abaG" class="aba" onclick="mudarTab('geral')">VISÃO GERAL / CLIENTE</div>
+        <div id="abaG" class="aba" onclick="mudarTab('geral')">VISÃO GERAL</div>
     </div>
 
     <div class="painel-filtros">
@@ -82,12 +157,13 @@
         </div>
 
         <div id="filtroGeralArea" style="display: none;">
-            <label>🔎 Extrato Total do Cliente (Soma apenas Pendentes):</label>
+            <label>🔎 Buscar por Cliente:</label>
             <input type="text" id="inputBuscaGeral" class="input-busca" placeholder="Digite o nome..." oninput="atualizarLista()">
+            <button class="btn-export" onclick="exportarExcel()">📊 Exportar para Excel</button>
         </div>
     </div>
 
-    <div style="overflow-x: auto;">
+    <div class="table-wrapper">
         <table>
             <thead>
                 <tr>
@@ -104,7 +180,7 @@
 
     <div class="rodape-total">
         <div>
-            <span id="tituloSoma" style="display:block; font-size: 11px; color: #bdc3c7;">VALOR TOTAL PENDENTE</span>
+            <span id="tituloSoma" style="display:block; font-size: 11px; color: #bdc3c7; text-transform: uppercase;">A receber</span>
             <span id="labelNomeCliente" style="font-weight: bold; color: #3498db;">Aguardando...</span>
         </div>
         <div class="valor-soma" id="displayTotal">R$ 0,00</div>
@@ -112,11 +188,26 @@
 </div>
 
 <footer>
-    © 2025 Paulo Carvalho - Todos os direitos reservados.
+    <div class="footer-content">
+        <span class="copyright">Copyright 2025 - Paulo Carvalho<br>todos os direitos reservados</span>
+        <button class="dark-mode-btn" onclick="toggleDarkMode()" id="darkModeBtn">🌙 Modo Escuro</button>
+    </div>
 </footer>
 
 <script>
     let abaAtual = 'mensal';
+
+    function toggleDarkMode() {
+        document.body.classList.toggle('dark-mode');
+        const isDark = document.body.classList.contains('dark-mode');
+        localStorage.setItem('dark-mode', isDark);
+        document.getElementById('darkModeBtn').innerText = isDark ? '☀️ Modo Claro' : '🌙 Modo Escuro';
+    }
+
+    if (localStorage.getItem('dark-mode') === 'true') {
+        document.body.classList.add('dark-mode');
+        document.getElementById('darkModeBtn').innerText = '☀️ Modo Claro';
+    }
 
     function adicionarVenda() {
         const cliente = document.getElementById('cadCliente').value;
@@ -176,19 +267,19 @@
         });
 
         filtrados.forEach(v => {
-            if (!v.pago) totalPendente += v.valor; // SOMA APENAS O QUE NÃO FOI PAGO
+            if (!v.pago) totalPendente += v.valor;
             
             corpo.innerHTML += `
                 <tr class="venda-item">
-                    <td><small>${v.mes}</small></td>
-                    <td><strong class="${v.pago ? 'status-pago' : ''}">${v.cliente}</strong></td>
-                    <td class="${v.pago ? 'status-pago' : ''}">R$ ${v.valor.toFixed(2)}</td>
-                    <td>
+                    <td data-label="Mês">${v.mes}</td>
+                    <td data-label="Cliente"><strong class="${v.pago ? 'status-pago' : ''}">${v.cliente}</strong></td>
+                    <td data-label="Valor" class="${v.pago ? 'status-pago' : ''}">R$ ${v.valor.toFixed(2)}</td>
+                    <td data-label="Status">
                         <button class="btn-status ${v.pago ? 'btn-pago' : ''}" onclick="alternarPagamento(${v.id})">
                             ${v.pago ? '✅ PAGO' : '⏳ RECEBER'}
                         </button>
                     </td>
-                    <td><button class="btn-excluir" onclick="removerVenda(${v.id})">🗑️</button></td>
+                    <td data-label="Ação"><button class="btn-excluir" onclick="removerVenda(${v.id})">🗑️</button></td>
                 </tr>`;
         });
 
@@ -196,10 +287,10 @@
         
         if (abaAtual === 'geral') {
             document.getElementById('tituloSoma').innerText = "DÍVIDA TOTAL PENDENTE";
-            document.getElementById('labelNomeCliente').innerText = busca === "" ? "Geral de todos" : `Cliente: ${busca.toUpperCase()}`;
+            document.getElementById('labelNomeCliente').innerText = busca === "" ? "Todos os clientes" : `Cliente: ${busca.toUpperCase()}`;
         } else {
-            document.getElementById('tituloSoma').innerText = `PENDENTE EM ${mesFiltro.toUpperCase()}`;
-            document.getElementById('labelNomeCliente').innerText = "A receber no mês";
+            document.getElementById('tituloSoma').innerText = `PENDENTE EM ${mesFiltro}`;
+            document.getElementById('labelNomeCliente').innerText = "Cobranças do mês";
         }
     }
 
@@ -210,6 +301,20 @@
             localStorage.setItem('vendas_app_pc', JSON.stringify(banco));
             atualizarLista();
         }
+    }
+
+    function exportarExcel() {
+        const banco = JSON.parse(localStorage.getItem('vendas_app_pc') || '[]');
+        if(banco.length === 0) return alert("Não há dados para exportar.");
+        let csv = "\uFEFFMês;Cliente;Valor;Parcelas;Pagamento;Status\n";
+        banco.forEach(v => {
+            csv += `${v.mes};${v.cliente};${v.valor.toFixed(2).replace('.', ',')};${v.parcelas};${v.pagamento};${v.pago ? "Pago" : "Pendente"}\n`;
+        });
+        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = "vendas_paulo_carvalho.csv";
+        link.click();
     }
 
     window.onload = () => {
